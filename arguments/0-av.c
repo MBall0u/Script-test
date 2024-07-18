@@ -6,7 +6,7 @@ int main(int ac __attribute__((unused)), char **av)
 
 	while (av[i] != NULL)
 	{
-		printf("Argument #%d is %s", (i+1), av[i]);
+		printf("Argument #%d is %s\n", (i+1), av[i]);
 		i++;
 	}
 	return (0);
