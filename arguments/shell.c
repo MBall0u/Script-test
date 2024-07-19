@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 int main(void)
 {
-	char *argv[] = {"/bin/ls", NULL}, *sep = " ", *buf = NULL;
+	char *argv[] = {"/bin/ls", NULL}, *buf = NULL;
 	size_t size = 64;
 	ssize_t e_check;
 	pid_t child_pid;
