@@ -7,18 +7,18 @@ int main(void)
 	char *buf = NULL;
 	size_t size = 64;
 	ssize_t e_check;
+	pid_t child_pid;
 
 	while (1)
 	{
 		printf("$ ");
 		e_check = getline(&buf, &size, stdin);
 		if (e_check == -1)
-		{
-			printf("Something went wrong!\n");
 			break;
-		}
-
-		printf("%s", buf);
+		child_pid = fork();
+		if (child_pid == 0)
+			execve(buf, NULL, NULL);
+		wait(NULL);
 
 		free(buf);
 		buf = NULL;
