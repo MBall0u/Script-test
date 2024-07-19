@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 int main(void)
 {
 	char *word[1], *sep = " ", *buf = NULL;
@@ -28,4 +30,5 @@ int main(void)
 		free(buf);
 		buf = NULL;
 	}
+	return (0);
 }
