@@ -25,8 +25,8 @@ int main(void)
 		child_pid = fork();
 		if (child_pid == 0)
 			execve(word[0], word, NULL);
-		wait(NULL);
-
+		else
+			wait(NULL);
 		free(buf);
 		buf = NULL;
 	}
