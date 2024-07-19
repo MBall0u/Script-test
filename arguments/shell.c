@@ -29,6 +29,10 @@ int main(void)
 
 			execve(argv[0], argv, NULL);
 		}
+		else
+		{
+			wait(NULL);
+		}
 		free(buf);
 		buf = NULL;
 	}
