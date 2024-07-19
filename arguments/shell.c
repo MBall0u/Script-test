@@ -12,16 +12,9 @@ int main(void)
 	pid_t cmd;
 	int status;
 
-	while (1)
+	while ((e_check = getline(&buf, &size, stdin)) != -1)
 	{
 		printf("$ ");
-
-		e_check = getline(&buf, &size, stdin);
-		if (e_check == -1)
-		{
-			printf("Something went wrong!\n");
-			break;
-		}
 
 		argv[0] = strtok(buf, sep);
 		printf("%s", argv[0]);
