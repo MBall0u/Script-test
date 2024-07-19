@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 int main(void)
 {
-	char *argv[] = {NULL, NULL}, *sep = "",*buf = NULL;
+	char *argv[] = {NULL, NULL}, *sep = "\n",*buf = NULL;
 	size_t size = 64;
 	ssize_t e_check;
 
