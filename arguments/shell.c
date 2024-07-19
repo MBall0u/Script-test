@@ -14,19 +14,20 @@ int main(void)
 	while (1)
 	{
 		printf("$ ");
+
+		e_check = getline(&buf, &size, stdin);
+		if (e_check == -1)
+		{
+			printf("Something went wrong!\n");
+			break;
+		}
+
+		argv[0] = strtok(buf, sep);
+		printf("%s", argv[0]);
+
 		cmd = fork();
 		if (cmd == 0)
 		{
-			e_check = getline(&buf, &size, stdin);
-			if (e_check == -1)
-			{
-				printf("Something went wrong!\n");
-				break;
-			}
-
-			argv[0] = strtok(buf, sep);
-			printf("%s", argv[0]);
-
 			execve(argv[0], argv, NULL);
 		}
 		else
