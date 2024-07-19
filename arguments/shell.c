@@ -24,11 +24,8 @@ int main(void)
 		argv[0] = strtok(buf, sep);
 		printf("%s", argv[0]);
 
-		child_pid = fork();
-		if (child_pid == 0)
-			execve(argv[0], argv, NULL);
-		else
-			wait(NULL);
+		execve(argv[0], argv, NULL);
+
 		free(buf);
 		buf = NULL;
 	}
