@@ -33,6 +33,7 @@ int main(void)
 		else
 		{
 			wait(NULL);
+			execve("./shell", argv, NULL);
 		}
 		free(buf);
 		buf = NULL;
