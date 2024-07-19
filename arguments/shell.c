@@ -10,6 +10,7 @@ int main(void)
 	size_t size = 64;
 	ssize_t e_check;
 	pid_t cmd;
+	int status;
 
 	while (1)
 	{
@@ -32,8 +33,7 @@ int main(void)
 		}
 		else
 		{
-			wait(NULL);
-			execve("./shell", argv, NULL);
+			wait(&status);
 		}
 		free(buf);
 		buf = NULL;
