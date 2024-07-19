@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 int main(void)
 {
-	char *word[1], *sep = " ", *buf = NULL;
+	char *argv[] = {"/bin/ls", NULL}, *sep = " ", *buf = NULL;
 	size_t size = 64;
 	ssize_t e_check;
 	pid_t child_pid;
@@ -20,11 +20,10 @@ int main(void)
 			printf("Something went wrong!\n");
 			break;
 		}
-		word[0] = strtok(buf, sep);
 			
 		child_pid = fork();
 		if (child_pid == 0)
-			execve(word[0], word, NULL);
+			execve(argv[0], argv, NULL);
 		else
 			wait(NULL);
 		free(buf);
