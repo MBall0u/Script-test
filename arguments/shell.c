@@ -22,7 +22,7 @@ int main(void)
 		}
 		
 		argv[0] = strtok(buf, sep);
-		printf("%s\n", argv[0]);
+		printf("%s", argv[0]);
 
 		child_pid = fork();
 		if (child_pid == 0)
