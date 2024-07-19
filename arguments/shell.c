@@ -33,7 +33,7 @@ int main(void)
 		}
 		else
 		{
-			wait(&status);
+			waitpid(cmd, &status, 0);
 		}
 		free(buf);
 		buf = NULL;
