@@ -31,6 +31,10 @@ int main(void)
 		printf("$ ");
 
 		for (word = strtok(buf, sep); word != NULL; word = strtok(NULL, sep))
+		{
+			args[count] = word;
+			count++;
+		}
 
 		cmd = fork();
 		if (cmd == 0)
