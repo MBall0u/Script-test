@@ -12,6 +12,12 @@ int main(void)
 	int status;
 	ssize_t check;
 
+	buf = malloc(size);
+	if (!buf)
+	{
+		return (1);
+	}
+	
 	while ((check = getline(&buf, &size, stdin)) != -1)
 	{
 		printf("$ ");
