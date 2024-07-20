@@ -8,11 +8,11 @@ int main(void)
 {
 	char *argv[] = {NULL, NULL}, *sep = "\n",*buf = NULL;
 	size_t size = 64;
-	ssize_t e_check;
 	pid_t cmd;
 	int status;
+	ssize_t check;
 
-	while ((e_check = getline(&buf, &size, stdin)) != -1)
+	while ((check = getline(&buf, &size, stdin)) != -1)
 	{
 		printf("$ ");
 
@@ -28,8 +28,8 @@ int main(void)
 		{
 			waitpid(cmd, &status, 0);
 		}
-		free(buf);
-		buf = NULL;
 	}
+	free(buf);
+	buf = NULL;
 	return (0);
 }
