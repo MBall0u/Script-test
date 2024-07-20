@@ -46,11 +46,21 @@ int main(void)
 		cmd = fork();
 		if (cmd == 0)
 		{
-			execve(args[0], args, NULL);
+			check = execve(args[0], args, NULL);
+			if (check == -1)
+			{
+				perror(s);
+				return (1);
+			}
 		}
 		else
 		{
-			waitpid(cmd, &status, 0);
+			check = waitpid(cmd, &status, 0);
+			if (check == -1)
+			{
+				perror(s);
+				return (1);
+			}
 		}
 	}
 	free(buf);
