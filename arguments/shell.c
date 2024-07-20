@@ -26,9 +26,16 @@ int main(void)
 		return (1);
 	}
 
-	while ((check = getline(&buf, &size, stdin)) != -1)
+	while (1)
 	{
 		printf("$ ");
+
+		check = getline(&buf, &size, stdin);
+		if (check == -1)
+		{
+			printf("Something went wrong!\n");
+			break;
+		}
 
 		for (word = strtok(buf, sep); word != NULL; word = strtok(NULL, sep))
 		{
