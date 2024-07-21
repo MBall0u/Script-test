@@ -16,13 +16,13 @@ int main(void)
 	buf = malloc(size);
 	if (!buf)
 	{
-		perror(s);
+		perror("Error");
 		return (1);
 	}
 	args = malloc(sizeof(char *) * size);
 	if (!args)
 	{
-		perror(s);
+		perror("Error");
 		return (1);
 	}
 
