@@ -16,7 +16,7 @@ int main(void)
     static int welcome = 0; /*used just to display welcome message once*/
     int i = 0; /*iterator for loop*/
     char *token; /*to hold tokens*/
-    char *args; /*to hold args, max args declared to 64*/
+    char **args = NULL; /*to hold args, max args declared to 64*/
     int status; /*hold wait status*/
     pid_t pid; /*hold pid of child*/
 	char *path = NULL; /*store a path*/
