@@ -6,14 +6,14 @@
 #include <sys/wait.h>
 int main(void)
 {
-	char *sep = "\n ", *word, *str; /*sep is the separators used for strtok, word is for the token, and str is for a dynamic version of buf*/
+	char *sep = " \t\r\n:a;", *word, *str; /*sep is the separators used for strtok, word is for the token, and str is for a dynamic version of buf*/
 	size_t size = 64; /*size is a general buffer amount, but it is only being used for getline and it is actually being ignored because buf is NULL*/
 	pid_t cmd; /*this holds the pid when fork is called so the two instances can run as needed*/
 	int status, count; /*status is for the waitpid function and checks when the child process terminates, and count is used for how many tokens there are and uses that to dynamically allocate an array on char pointers*/
 	ssize_t check; /*takes the return value of each function and checks for errors*/
 	char **args; /*args is used for an array of char pointer to be dynamically allocated*/
 	char *buf = NULL; /*buf is for getline to dynamically alloced inside the function, when buf is NULL the bufsize is ignored*/
-	extern char **environ;
+	char *envp[] = {"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", NULL};
 	char *temp = "/usr/bin/";
 
 	while (1)
@@ -27,13 +27,14 @@ int main(void)
 			printf("Something went wrong!\n");
 			break;
 		}
-		str = malloc(sizeof(char) * (strlen(buf) + 1)); /*allocated memory to str for the exact amount of buf + 1 for a null byte*/
+		str = malloc(sizeof(char) * (strlen(buf) + 1 + strlen(temp))); /*allocated memory to str for the exact amount of buf + 1 for a null byte*/
 		if (!str) /*checks to see if memory allocation failed*/
 		{
 			perror("Error");
 			exit(EXIT_FAILURE);
 		}
-		strcpy(str, buf); /*this step is needed because a we cannot pass a string literal through strtok because it cannot be modified*/
+		strncat(str, temp, 9); /*this step is needed because a we cannot pass a string literal through strtok because it cannot be modified*/
+		strcat(str, buf);
 
 		for (word = strtok(str, sep); word != NULL; word = strtok(NULL, sep)) /*this step is to see how many tokens there are*/
 		{
@@ -57,9 +58,8 @@ int main(void)
 		cmd = fork(); /*creates a child process and stored the pid in cmd*/
 		if (cmd == 0) /*check if this is the child process*/
 		{
-			strcat(temp, args[0]);
-			args[0] = temp;
-			check = execve(args[0], args, environ); /*executes program and stores the return value if there is one*/
+			printf("%s\n", args[0]);
+			check = execve(args[0], args, envp); /*executes program and stores the return value if there is one*/
 			if (check == -1) /*checks if there was an error while executing*/
 			{
 				perror("Execve Error");
