@@ -14,16 +14,16 @@ int main(void)
 	char **args;
 	char *buf = NULL;
 
-	args = malloc(sizeof(char *) * size);
-	if (!args)
-	{
-		perror("Error");
-		return (1);
-	}
-
 	while (1)
 	{
 		printf("$ ");
+
+		args = malloc(sizeof(char *) * size);
+		if (!args)
+		{
+			perror("Error");
+			return (1);
+		}
 
 		check = getline(&buf, &size, stdin);
 		if (check == -1)
