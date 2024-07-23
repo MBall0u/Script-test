@@ -13,7 +13,7 @@ int main(void)
 	ssize_t check; /*takes the return value of each function and checks for errors*/
 	char **args; /*args is used for an array of char pointer to be dynamically allocated*/
 	char *buf = NULL; /*buf is for getline to dynamically alloced inside the function, when buf is NULL the bufsize is ignored*/
-	char *envp[] = {"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", NULL};
+	extern char **environ;
 	char *temp = "/usr/bin/";
 
 	while (1)
@@ -59,7 +59,7 @@ int main(void)
 		if (cmd == 0) /*check if this is the child process*/
 		{
 			printf("%s\n", args[0]);
-			check = execve(args[0], args, envp); /*executes program and stores the return value if there is one*/
+			check = execve(args[0], args, environ); /*executes program and stores the return value if there is one*/
 			if (check == -1) /*checks if there was an error while executing*/
 			{
 				perror("Execve Error");

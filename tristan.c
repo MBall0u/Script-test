@@ -1,90 +1,116 @@
 #include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <limits.h>
+
+static int max_args = 64; /*limit to amount of args*/
+
 int main(void)
 {
-	char *sep = " \t\r\n:a;", *word, *str; /*sep is the separators used for strtok, word is for the token, and str is for a dynamic version of buf*/
-	size_t size = 64; /*size is a general buffer amount, but it is only being used for getline and it is actually being ignored because buf is NULL*/
-	pid_t cmd; /*this holds the pid when fork is called so the two instances can run as needed*/
-	int status, count; /*status is for the waitpid function and checks when the child process terminates, and count is used for how many tokens there are and uses that to dynamically allocate an array on char pointers*/
-	ssize_t check; /*takes the return value of each function and checks for errors*/
-	char **args; /*args is used for an array of char pointer to be dynamically allocated*/
-	char *buf = NULL; /*buf is for getline to dynamically alloced inside the function, when buf is NULL the bufsize is ignored*/
-	extern char **environ;
-	char *temp = "/usr/bin/";
+    char *line = NULL; /*buffer holding input*/
+    size_t len = 0; /*length of buffer*/
+    ssize_t read; /*hold the result of getline*/
+    static int welcome = 0; /*used just to display welcome message once*/
+    int i = 0; /*iterator for loop*/
+    char *token; /*to hold tokens*/
+    char *args[max_args]; /*to hold args, max args declared to 64*/
+    int status; /*hold wait status*/
+    pid_t pid; /*hold pid of child*/
+	char *path = NULL; /*store a path*/
+	char *envp[] = {"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", NULL};
+	/*environment path is path variables to search*/
 
-	while (1)
+    if (welcome == 0) /*just the welcome message, change this later. set to 0 and will change value to display only once*/
+    {
+        printf("Welcome to Super Cool Guy Shell!\n");
+        printf("Type help for commands, or type exit to quit. or cntrl d to quit.\n");
+        welcome = 1; /*since it = 1 now it won't display again*/
+        sleep(2); /*for dramatic effect*/
+		printf("Super Cool Guy$ "); /*prompt message, random for now*/
+    }
+
+    while ((read = getline(&line, &len, stdin)) != -1) /*read user input here, and start the infinite loop*/
+    {
+        printf("Super Cool Guy$ "); /*prompt message, random for now*/
+        token = strtok(line, " \t\r\n:a;"); /*turn line into tokens, not sure about delimeters used*/
+
+        while (token != NULL && i < max_args) /*continue through all args, i is set to 0*/
+		{
+            args[i] = token; /*stores each word into i position of array*/
+            token = strtok(NULL, " \t\r\n:a;"); /*adds a NULL and then moves to next delimeter*/
+            i++; /*increment to next element of array*/
+        }
+        args[i] = NULL; /*add a NULL to the end of array*/
+
+        if (args[0] == NULL) /*if first element is empty*/
+		{
+			/*do nothing and skip to next statement?*/
+        }
+		else if (strcmp(args[0], "exit") == 0) /*if they typed exit this will exit*/
+		{
+            printf("\nExiting Super Cool Guy Shell...\n\n"); /*dumb message to change*/
+            free(line); /*free memory of lin*/
+            return EXIT_SUCCESS;
+        }
+		else if (strcmp(args[0], "help") == 0) /*help messages to use later on*/
+		{
+            printf("Commands that work:\n");
+            printf("ls: list files in current directory\n");
+            printf("exit: quits program\n");
+            printf("help: prints this help sequence again\n");
+        }
+		else /*if the word typed was not help or exit*/
+		{
+            pid = fork(); /*fork here*/
+
+            if (pid == -1) /* -1 is failure*/
+			{
+                perror("fork failure");
+                exit(EXIT_FAILURE);
+            }
+			else if (pid > 0) /*child is 0, so this is for parent to wait*/
+			{
+                waitpid(pid, &status, 0); /*store status until 0 "the child" is done*/
+                fflush(stdout); /*put the output immediately rather than waiting for buffer*/
+            }
+			else /*child checks args*/
+			{
+                if (strncmp(args[0], "./", 2) == 0) /*trying to execute using ./ comparing only the first 2 characters */
+				{
+                    args[0] += 2; /*move forward 2 characters to skip ./ removing it*/
+                    strcat(args[0], "/"); /* add / to continue path if its in a different directory*/
+                }
+
+                if (strcmp(args[0], "ls") == 0) /*direct path to ls*/
+				{
+                    path = "usr/bin/ls";
+                }
+				else if (strcmp(args[0], "cat") == 0) /*tried to do cat but doesn't work*/
+				{
+                    path = "/bin/cat";
+                }
+				else /*if command not found*/
+				{
+                    fprintf(stderr, "Unknown command: %s\n", args[0]);
+                    exit(EXIT_FAILURE);
+                }
+                if (execve(path, args, envp) == -1) /*try to execute with envp */
+				{
+                    perror("execve failure");
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+    }
+
+    if (line != NULL) /*free line memory if there is something still there*/
 	{
-		printf("$ "); /*with print at the beginning of each line no matter what*/
+        free(line);
+    }
 
-		count = 0; /*initializes the count to zero for when it loops*/
-		check = getline(&buf, &size, stdin); /*get input from standard input and dynamically allocates the needed memory to buf, ignoring size*/
-		if (check == -1) /*check to see if getline failed*/
-		{
-			printf("Something went wrong!\n");
-			break;
-		}
-		str = malloc(sizeof(char) * (strlen(buf) + 1 + strlen(temp))); /*allocated memory to str for the exact amount of buf + 1 for a null byte*/
-		if (!str) /*checks to see if memory allocation failed*/
-		{
-			perror("Error");
-			exit(EXIT_FAILURE);
-		}
-		strncat(str, temp, 9); /*this step is needed because a we cannot pass a string literal through strtok because it cannot be modified*/
-		strcat(str, buf);
+    return EXIT_SUCCESS; /*return for succesful exit*/
 
-		for (word = strtok(str, sep); word != NULL; word = strtok(NULL, sep)) /*this step is to see how many tokens there are*/
-		{
-			count++;
-		}
-
-		args = malloc(sizeof(char *) * count); /*this uses count to dynamically alloced the exact amount of memory needed*/
-		if (!args) /*checks if the memory allocation fails for args*/
-		{
-			perror("Error");
-			exit(EXIT_FAILURE);
-		}
-
-		count = 0; /*resets the count for adding the tokens to the args array*/
-		for (word = strtok(str, sep); word != NULL; word = strtok(NULL, sep)) /*iterates through the string until token is NULL*/
-		{
-			args[count] = word; /*initializes the space in args to the current token*/
-			count++; /*moves forward in args*/
-		}
-
-		cmd = fork(); /*creates a child process and stored the pid in cmd*/
-		if (cmd == 0) /*check if this is the child process*/
-		{
-			printf("%s\n", args[0]);
-			check = execve(args[0], args, environ); /*executes program and stores the return value if there is one*/
-			if (check == -1) /*checks if there was an error while executing*/
-			{
-				perror("Execve Error");
-				exit(EXIT_FAILURE);
-			}
-		}
-		else if (cmd == -1) /* -1 is failure*/
-		{
-			perror("fork failure");
-			exit(EXIT_FAILURE);
-		}
-		else /*if not a child then a parent*/
-		{
-			check = waitpid(cmd, &status, 0); /*waits on the child process to terminate*/
-			if (check == -1) /*checks if there was an error*/
-			{
-				perror("Error");
-				exit(EXIT_FAILURE);
-			}
-		}
-		free(str); /*frees dynamically allocated memory for str*/
-		str = NULL;
-
-		free(args); /*frees dynamically allocated memory for args*/
-		args = NULL;
-	}
-	return (0);
 }
