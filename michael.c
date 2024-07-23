@@ -9,7 +9,7 @@ int main(void)
 	char *sep = "\n ", *word, *str;
 	size_t size = 64;
 	pid_t cmd;
-	int status, count = 0;
+	int status, count;
 	ssize_t check;
 	char **args;
 	char *buf = NULL;
@@ -18,26 +18,34 @@ int main(void)
 	{
 		printf("$ ");
 
-		args = malloc(sizeof(char *) * size);
-		if (!args)
-		{
-			perror("Error");
-			return (1);
-		}
-
+		count = 0;
 		check = getline(&buf, &size, stdin);
 		if (check == -1)
 		{
 			printf("Something went wrong!\n");
 			break;
 		}
-		str = malloc(sizeof(char) * (strlen(buf)));
+		str = malloc(sizeof(char) * (strlen(buf) + 1));
 		if (!str)
 		{
 			perror("Error");
 			return (1);
 		}
 		strcpy(str, buf);
+
+		for (word = strtok(str, sep); word != NULL; word = strtok(NULL, sep))
+		{
+			count++;
+		}
+
+		args = malloc(sizeof(char *) * count);
+		if (!args)
+		{
+			perror("Error");
+			return (1);
+		}
+
+		count = 0;
 		for (word = strtok(str, sep); word != NULL; word = strtok(NULL, sep))
 		{
 			args[count] = word;
@@ -64,8 +72,10 @@ int main(void)
 			}
 		}
 		free(str);
-		free(args);
 		str = NULL;
+
+		free(args);
+		args = NULL;
 	}
 	return (0);
 }
