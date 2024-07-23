@@ -13,6 +13,7 @@ int main(void)
 	ssize_t check; /*takes the return value of each function and checks for errors*/
 	char **args; /*args is used for an array of char pointer to be dynamically allocated*/
 	char *buf = NULL; /*buf is for getline to dynamically alloced inside the function, when buf is NULL the bufsize is ignored*/
+	extern char **environ;
 
 	while (1)
 	{
@@ -59,7 +60,7 @@ int main(void)
 			{
 				args[0] = "/bin/ls";
 			}
-			check = execve(args[0], args, NULL); /*executes program and stores the return value if there is one*/
+			check = execve(args[0], args, environ); /*executes program and stores the return value if there is one*/
 			if (check == -1) /*checks if there was an error while executing*/
 			{
 				perror("Execve Error");
