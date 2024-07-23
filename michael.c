@@ -29,7 +29,7 @@ int main(void)
 		if (!str) /*checks to see if memory allocation failed*/
 		{
 			perror("Error");
-			return (1);
+			exit(EXIT_FAILURE);
 		}
 		strcpy(str, buf); /*this step is needed because a we cannot pass a string literal through strtok because it cannot be modified*/
 
@@ -42,7 +42,7 @@ int main(void)
 		if (!args) /*checks if the memory allocation fails for args*/
 		{
 			perror("Error");
-			return (1);
+			exit(EXIT_FAILURE);
 		}
 
 		count = 0; /*resets the count for adding the tokens to the args array*/
@@ -59,8 +59,13 @@ int main(void)
 			if (check == -1) /*checks if there was an error while executing*/
 			{
 				perror("Error");
-				return (1);
+				exit(EXIT_FAILURE);
 			}
+		}
+		else if (cmd == -1) /* -1 is failure*/
+		{
+			perror("fork failure");
+			exit(EXIT_FAILURE);
 		}
 		else /*if not a child then a parent*/
 		{
@@ -68,7 +73,7 @@ int main(void)
 			if (check == -1) /*checks if there was an error*/
 			{
 				perror("Error");
-				return (1);
+				exit(EXIT_FAILURE);
 			}
 		}
 		free(str); /*frees dynamically allocated memory for str*/
