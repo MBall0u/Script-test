@@ -65,7 +65,7 @@ int main(void)
 		}
 		free(str);
 		free(args);
-		buf = NULL;
+		str = NULL;
 	}
 	return (0);
 }
