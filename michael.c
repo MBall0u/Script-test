@@ -33,6 +33,7 @@ int main(void)
 		}
 		else
 		{
+			printf("We are forking");
 			cmd = fork(); /*creates a child process and stored the pid in cmd*/
 			if (cmd == 0) /*check if this is the child process*/
 			{
