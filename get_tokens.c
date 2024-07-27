@@ -44,5 +44,5 @@ char **get_tokens(char *buf, char *sep)
 	args[count] = NULL; /*sets the final position in the array to NULL*/
 	free(temp_str); /*frees the memory allocated during the string duplication*/
 	temp_str = NULL; /*sets it to NULL after being free'd*/
-	return (&args); /*returns the array of args to the calling function*/
+	return (args); /*returns the array of args to the calling function*/
 }
