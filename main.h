@@ -12,5 +12,6 @@
 char **get_tokens(char *buf, char *sep);
 char *path_get(char **env);
 char *check_build(char *arg, char **path);
+void function_call(char **args, char **env);
 
 #endif
