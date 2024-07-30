@@ -4,14 +4,23 @@
  * 
  * 
 */
-void free_all(char **args, char **path_args, char *buf, char *temp)
+void free_all(char ***args, char ***path_args, char **buf, char **temp)
 {
-	free(buf); /*frees dynamically allocated memory for str*/
-	buf = NULL;
-	free(args); /*frees dynamically allocated memory for args*/
+	int i;
+
+	free(*buf); /*frees dynamically allocated memory for str*/
+	*buf = NULL;
+	for (i = 0; (*args)[i] != NULL; i++)
+	{
+		free((*args)[i]);
+	}
+	free(*args); /*frees dynamically allocated memory for args*/
 	args = NULL;
+	for (i = 0; i == 0; i++)
+	{
+		free((*path_args)[i]);
+	}
 	free(path_args);
 	path_args = NULL;
-	free(temp);
 	temp = NULL;
 }
