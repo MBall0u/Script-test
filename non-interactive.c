@@ -37,6 +37,6 @@ int non_interactive(void)
 		args[0] = temp;
 		function_call(args, environ);
 	}
-	free_all(args, path_args, buf, temp);
+	free_all(&args, &path_args, &buf, &temp);
 	return (0);
 }
