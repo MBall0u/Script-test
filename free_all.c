@@ -20,7 +20,7 @@ void free_all(char ***args, char ***path_args, char **buf, char **temp)
 	{
 		free(*path_args[i]);
 	}
-	free(path_args);
+	free(*path_args);
 	*path_args = NULL;
 	*temp = NULL;
 }
