@@ -36,7 +36,7 @@ int loop_for_interactive(void)
 		}
 		else
 		{
-			args[0] = temp;
+			args[0] = strdup(temp);
 			function_call(args, environ);
 		}
 		free_all(&args, &path_args, &buf, &temp);
