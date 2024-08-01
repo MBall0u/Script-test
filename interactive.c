@@ -31,6 +31,7 @@ int loop_for_interactive(void)
 		temp = check_build(args[0], path_args); /*gets a workable path and puts it in postion 0 of the args array*/
 		if (temp == NULL)
 		{
+			free_all(&args, &path_args, &buf, &temp);
 			perror("Cannot find command\n");
 			exit(EXIT_FAILURE);
 		}
