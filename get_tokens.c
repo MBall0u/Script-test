@@ -21,6 +21,8 @@ char **get_tokens(char *buf, char *sep)
 		count++;
 	}
 
+	free(temp_str); /*frees the memory allocated during the string duplication*/
+	temp_str = NULL;
 	temp_str = strdup(buf);
 
 	args = malloc(sizeof(char *) * (count + 1)); /*dynamically allocates an array of char pointers based off of the count*/
