@@ -9,7 +9,7 @@
 */
 char **get_tokens(char *buf, char *sep)
 {
-	char *word, *str; /*word is the pointer used to iterate through strtok, str is a dynamically allocated string that can be modified by strtok*/
+	char *word; /*word is the pointer used to iterate through strtok, str is a dynamically allocated string that can be modified by strtok*/
 	char **args; /*an array of char pointers that will be dynamically allocated based off of strtok and then returned to the calling function*/
 	char *temp_str; /*a temp string that is used to find out how large we need to make the arg list*/
 	int count = 0; /*a count of how many args there are*/
