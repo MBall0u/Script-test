@@ -52,5 +52,6 @@ char *check_build(char *arg, char **path)
 			count++; /*if that path is not valid then it goes to the next path arg*/
 		}
 	}
+	free(temp_args);
 	return (NULL); /*if it goes through all path args and still does not find a valid path it returns NULL*/
 }
