@@ -43,7 +43,7 @@ char *check_build(char *arg, char **path)
 	}
 	else /*argument is not a valid path*/
 	{
-		for (count = 1; temp_args[count] != NULL; count++) /*loop that iterates through the passed path args*/
+		for (count = 1; temp_args[count] != NULL; ++count) /*loop that iterates through the passed path args*/
 		{
 			temp = strdup(temp_args[count]);
 			if (stat(temp, &st) == 0) /*checks to see if new path is valid*/
