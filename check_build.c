@@ -36,6 +36,7 @@ char *check_build(char *arg, char **path)
 		strcat(temp_args[count], "/");
 		strcat(temp_args[count], arg);
 	}
+	temp_args[count] = NULL;
 	if (stat(arg, &st) == 0) /*checks to see if the base argument is a valid path first*/
 	{
 		return (arg); /*if it is then it returns that to the calling function*/
