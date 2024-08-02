@@ -61,7 +61,7 @@ char **get_tokens(char *buf, char *sep)
 char *check_build(char *arg, char **path)
 {
     char *temp = NULL;
-    int count, i;
+    int count;
     char **temp_args;
 
     for (count = 0; path[count] != NULL; count++)
@@ -92,11 +92,8 @@ char *check_build(char *arg, char **path)
 int main(void)
 {
     char *sep = " \t\r\n:;=";
-    size_t size = 64;
-    ssize_t check;
     char **args, **path_args;
     char *buf = "lsd";
-    extern char **environ;
     char *path, *temp = NULL;
 
     printf("$ ");
