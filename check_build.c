@@ -52,7 +52,7 @@ char *check_build(char *arg, char **path)
 				{
 					if (temp_args != NULL)
 					{
-						for (count = 0; *temp_args[count] != NULL; count++)
+						for (count = 0; temp_args[count] != NULL; count++)
 							free(temp_args[count]);
 						free(temp_args); /*frees dynamically allocated memory for args*/
 						temp_args = NULL;
