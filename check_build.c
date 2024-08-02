@@ -18,7 +18,7 @@ char *check_build(char *arg, char **path)
 
 	for (count = 0; path[count] != NULL; count++)
 	{}
-	temp_args = malloc(sizeof(char *) * (count));
+	temp_args = malloc(sizeof(char *) * (count + 1));
 	if (!temp_args)
 	{
 		perror("Allocation Error\n");
