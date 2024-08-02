@@ -18,7 +18,7 @@ void free_all(char ***args, char ***path_args, char **temp)
     {
         for (i = 0; (*path_args)[i] != NULL; i++)
         {
-            free(*path_args[i]);
+            free((*path_args)[i]);
         }
     }
     free(*path_args);
