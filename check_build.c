@@ -24,9 +24,10 @@ char *check_build(char *arg, char **path)
 		perror("Allocation Error\n");
 		exit(EXIT_FAILURE);
 	}
+	temp_args[count] = NULL;
 	for (count = 0; path[count + 1] != NULL; count++)
 	{
-		temp_args[count] = malloc(strlen(path[count + 1]) + strlen(arg) + 2);
+		temp_args[count] = malloc(sizeof(char) * (strlen(path[count + 1]) + strlen(arg) + 2));
 		if (!temp_args[count])
 		{
 			perror("Allocation Error\n");
@@ -36,7 +37,6 @@ char *check_build(char *arg, char **path)
 		strcat(temp_args[count], "/");
 		strcat(temp_args[count], arg);
 	}
-	temp_args[count] = NULL;
 	if (stat(arg, &st) == 0) /*checks to see if the base argument is a valid path first*/
 	{
 		return (arg); /*if it is then it returns that to the calling function*/
