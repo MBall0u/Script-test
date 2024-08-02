@@ -13,42 +13,27 @@ char *check_build(char *arg, char **path)
 {
 	struct stat st; /*the file info*/
 	char *temp = NULL; /*a temp string for the path arg and the input to get spliced*/
-	int count; /*arg position counter*/
-	char **temp_args;
+	int count = 1; /*arg position counter*/
 
-	for (count = 0; path[count] != NULL; count++)
-	{}
-	temp_args = malloc(sizeof(char *) * (count));
-	if (!temp_args)
-	{
-		perror("Allocation Error\n");
-		exit(EXIT_FAILURE);
-	}
-	for (count = 0; path[count + 1] != NULL; count++)
-	{
-		strcpy(temp_args[count], path[count + 1]);
-		strcat(temp_args[count], "/");
-		strcat(temp_args[count], arg);
-	}
 	if (stat(arg, &st) == 0) /*checks to see if the base argument is a valid path first*/
 	{
 		return (arg); /*if it is then it returns that to the calling function*/
 	}
 	else /*argument is not a valid path*/
 	{
-		for (count = 0; temp_args[count] != NULL; count++) /*loop that iterates through the passed path args*/
+		while (path[count] != NULL) /*loop that iterates through the passed path args*/
 		{
-			temp = strdup(temp_args[count]);
+			temp = malloc(sizeof(char) * (strlen(path[count]) + 2 + (strlen(arg))));
+			strcpy(temp, path[count]);
+			strcat(temp, "/");
+			strcat(temp, arg); /*adds the arg to the back of the path*/
 			if (stat(temp, &st) == 0) /*checks to see if new path is valid*/
 			{
 				if (access(temp, X_OK) == 0)
 				{
-					free(temp_args);
 					return (temp); /*if it is valid then it returns to the calling function with the new path*/
 				}
 			}
-			free(temp);
-			temp = NULL;
 			count++; /*if that path is not valid then it goes to the next path arg*/
 		}
 	}
