@@ -25,15 +25,15 @@ char *check_build(char *arg, char **path)
 		exit(EXIT_FAILURE);
 	}
 	temp_args[count] = NULL;
-	for (count = 0; path[count + 1] != NULL; count++)
+	for (count = 0; path[count] != NULL; count++)
 	{
-		temp_args[count] = malloc(sizeof(char) * (strlen(path[count + 1]) + strlen(arg) + 2));
+		temp_args[count] = malloc(sizeof(char) * (strlen(path[count]) + strlen(arg) + 2));
 		if (!temp_args[count])
 		{
 			perror("Allocation Error\n");
 			exit(EXIT_FAILURE);
 		}
-		strcpy(temp_args[count], path[count + 1]);
+		strcpy(temp_args[count], path[count]);
 		strcat(temp_args[count], "/");
 		strcat(temp_args[count], arg);
 	}
@@ -43,14 +43,20 @@ char *check_build(char *arg, char **path)
 	}
 	else /*argument is not a valid path*/
 	{
-		for (count = 0; temp_args[count] != NULL; count++) /*loop that iterates through the passed path args*/
+		for (count = 1; temp_args[count] != NULL; count++) /*loop that iterates through the passed path args*/
 		{
 			temp = strdup(temp_args[count]);
 			if (stat(temp, &st) == 0) /*checks to see if new path is valid*/
 			{
 				if (access(temp, X_OK) == 0)
 				{
-					free(temp_args);
+					if (temp_args != NULL)
+					{
+						for (count = 0; *temp_args[count] != NULL; count++)
+							free(temp_args[count]);
+						free(temp_args); /*frees dynamically allocated memory for args*/
+						temp_args = NULL;
+					}
 					return (temp); /*if it is valid then it returns to the calling function with the new path*/
 				}
 			}
@@ -59,6 +65,12 @@ char *check_build(char *arg, char **path)
 			count++; /*if that path is not valid then it goes to the next path arg*/
 		}
 	}
-	free(temp_args);
+	if (temp_args != NULL)
+	{
+		for (count = 0; temp_args[count] != NULL; count++)
+			free(temp_args[count]);
+		free(temp_args); /*frees dynamically allocated memory for args*/
+		temp_args = NULL;
+	}
 	return (NULL); /*if it goes through all path args and still does not find a valid path it returns NULL*/
 }
