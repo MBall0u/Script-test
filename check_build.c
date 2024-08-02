@@ -26,6 +26,12 @@ char *check_build(char *arg, char **path)
 	}
 	for (count = 0; path[count + 1] != NULL; count++)
 	{
+		temp_args[count] = malloc(strlen(path[count + 1]) + strlen(arg) + 2);
+		if (!temp_args[count])
+		{
+			perror("Allocation Error\n");
+			exit(EXIT_FAILURE);
+		}
 		strcpy(temp_args[count], path[count + 1]);
 		strcat(temp_args[count], "/");
 		strcat(temp_args[count], arg);
