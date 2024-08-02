@@ -40,6 +40,10 @@ char *check_build(char *arg, char **path)
 	}
 	if (stat(arg, &st) == 0) /*checks to see if the base argument is a valid path first*/
 	{
+		for (i = 0; i <= count; i++)
+			free(temp_args[i]);
+		free(temp_args); /*frees dynamically allocated memory for args*/
+		temp_args = NULL;
 		return (arg); /*if it is then it returns that to the calling function*/
 	}
 	else /*argument is not a valid path*/
