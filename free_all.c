@@ -14,7 +14,7 @@ void free_all(char ***args, char ***path_args, char **buf, char **temp)
 		free(*args[i]);
 	free(*args); /*frees dynamically allocated memory for args*/
 	*args = NULL;
-	if ((*path_args)[i] != NULL)
+	if (*path_args != NULL)
 	{
 		for (i = 0; (*path_args)[i] != NULL; i++)
 		{
